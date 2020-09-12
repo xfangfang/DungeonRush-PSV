@@ -16,6 +16,7 @@ Collect heros to enlarge your army while defending yourself from the monsters. E
 ### Multiplayers
 
 Player 1 Use UP DOWN LEFT RIGHT to move.
+
 Player 2 Use TRIANGLE CROSS SQUARE CIRCLE to move.
 
 This mode is competitive. Defend yourself from the monsters and your friend!
@@ -49,4 +50,5 @@ cd build && make
 ## TODO
 
 Make SDL_RenderCopyEx works on PSV
+
 Add Setting View
