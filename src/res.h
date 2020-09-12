@@ -14,9 +14,9 @@
 #define TEXTSET_SIZE 1024
 #define TEXTURES_SIZE 1024
 #define EFFECTS_SIZE 128
-#define UNIT 32
-#define SCREEN_WIDTH 1440
-#define SCREEN_HEIGHT 960
+#define UNIT 24
+#define SCREEN_WIDTH 960
+#define SCREEN_HEIGHT 544
 #define FONT_SIZE 32
 // Resource ID
 // Map Resource
