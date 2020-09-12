@@ -1,0 +1,12 @@
+.vscode
+.DS_Store
+build
+misc
+dist
+snake
+*.zip
+storage.dat
+archive
+dungeon_rush
+dungeon_rush.dSYM
+dungeon_rush.code-workspace
