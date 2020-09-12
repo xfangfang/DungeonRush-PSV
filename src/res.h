@@ -4,6 +4,11 @@
 #include <SDL2/SDL.h>
 #include "types.h"
 
+#if (defined DBG) && (defined __vita__)
+    #include "vita_debug.h"
+    #define printf debug
+#endif
+
 #define PATH_LEN 1024
 #define TILESET_SIZE 1024
 #define TEXTSET_SIZE 1024
