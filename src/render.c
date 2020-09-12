@@ -52,10 +52,10 @@ void dim() {
 void initCountDownBar() {
   createAndPushAnimation(
       &animationsList[RENDER_LIST_UI_ID], &textures[RES_SLIDER], NULL,
-      LOOP_INFI, 1, SCREEN_WIDTH / 2 - 128, 10, SDL_FLIP_NONE, 0, AT_TOP_LEFT);
+      LOOP_INFI, 1, UNIT*9, 0, SDL_FLIP_NONE, 0, AT_TOP_LEFT);
   countDownBar = createAndPushAnimation(
       &animationsList[RENDER_LIST_UI_ID], &textures[RES_BAR_BLUE], NULL,
-      LOOP_INFI, 1, SCREEN_WIDTH / 2 - 128, 10, SDL_FLIP_NONE, 0, AT_TOP_LEFT);
+      LOOP_INFI, 1, UNIT*9, 0, SDL_FLIP_NONE, 0, AT_TOP_LEFT);
 }
 void initInfo() {
   extern int stage;

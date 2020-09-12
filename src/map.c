@@ -91,8 +91,8 @@ void initPrimMap(double floorPercent, int smoothTimes) {
   int w = n / 2, h = m / 2;
   for (int i = ltx; i < ltx + w; i++)
     for (int j = lty; j < lty + h; j++) primMap[i][j] = 1;
-  for (int i = 0; i < n; i++) primMap[i][0] = primMap[i][m - 1] = 0;
-  for (int j = 0; j < m; j++) primMap[0][j] = primMap[n - 1][j] = 0;
+  // do not draw map on top line
+  // for (int i = 0; i < n; i++) primMap[i][0] = 0;
   while (smoothTimes--) {
     cellularAutomata();
 #ifdef DBG
@@ -177,6 +177,18 @@ void initRandomMap(double floorPercent, int smoothTimes, double trapRate) {
             hasMap[i * 2][j * 2 + 1] = hasMap[2 * i + 1][2 * j + 1] = 1;
     }
   }
+  for (int i = 0; i < n; i++) hasMap[i][m-1] = hasMap[i][0] = 0;
+  
+  for (int i = 0; i < 5; i++){
+    for (int j = 0; j < 9; j++){
+      hasMap[j][i] = 0;
+    }
+  }
+  for (int i = 0; i < 20; i++){
+    hasMap[i][0] = 0;
+    hasMap[i][1] = 0;
+  }
+  
 #ifdef DBG
   phasMap();
 #endif
