@@ -148,34 +148,34 @@ void appendSpriteToSnake(
   initLinkNode(node);
 
   // create a sprite
-  Sprite* snakeHead = NULL;
-  if (snake->sprites->head) {
-    snakeHead = snake->sprites->head->element;
-    x = snakeHead->x, y = snakeHead->y;
+  Sprite* snakeTail= NULL;
+  if (snake->sprites->tail) {
+    snakeTail = snake->sprites->tail->element;
+    x = snakeTail->x, y = snakeTail->y;
     int delta =
-        (snakeHead->ani->origin->width * SCALLING_FACTOR +
+        (snakeTail->ani->origin->width * SCALLING_FACTOR +
          commonSprites[sprite_id].ani->origin->width * SCALLING_FACTOR) /
         2;
-    if (snakeHead->direction == LEFT)
-      x -= delta;
-    else if (snakeHead->direction == RIGHT)
+    if (snakeTail->direction == LEFT)
       x += delta;
-    else if (snakeHead->direction == UP)
-      y -= delta;
-    else
+    else if (snakeTail->direction == RIGHT)
+      x -= delta;
+    else if (snakeTail->direction == UP)
       y += delta;
+    else
+      y -= delta;
   }
   Sprite* sprite = createSprite(&commonSprites[sprite_id], x, y);
   sprite->direction = direcion;
   if (direcion == LEFT) sprite->face = LEFT;
-  if (snakeHead) {
-    sprite->direction = snakeHead->direction;
-    sprite->face = snakeHead->face;
-    sprite->ani->currentFrame = snakeHead->ani->currentFrame;
+  if (snakeTail) {
+    sprite->direction = snakeTail->direction;
+    sprite->face = snakeTail->face;
+    sprite->ani->currentFrame = snakeTail->ani->currentFrame;
   }
   // insert the sprite
   node->element = sprite;
-  pushLinkNodeAtHead(snake->sprites, node);
+  pushLinkNode(snake->sprites, node);
 
   // push ani
   pushAnimationToRender(RENDER_LIST_SPRITE_ID, sprite->ani);
