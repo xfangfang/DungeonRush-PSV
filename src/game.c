@@ -187,8 +187,15 @@ void appendSpriteToSnake(
 void initPlayer() {
   spritesCount++;
   Snake* p = spriteSnake[playersCount] = createSnake(MOVE_STEP, playersCount);
-  appendSpriteToSnake(p, SPRITE_KNIGHT, SCREEN_WIDTH / 2,
+  if (playersCount % 2){
+      appendSpriteToSnake(p, SPRITE_KNIGHT, SCREEN_WIDTH / 2,
                       SCREEN_HEIGHT / 2 + playersCount * 2 * UNIT, RIGHT);
+  } else {
+      appendSpriteToSnake(p, SPRITE_KNIGHT, SCREEN_WIDTH / 2,
+                      SCREEN_HEIGHT / 2 + playersCount * 2 * UNIT, LEFT);
+  }
+  
+
   playersCount++;
 }
 void generateHeroItem(int x, int y) {
