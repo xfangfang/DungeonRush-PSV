@@ -410,6 +410,11 @@ void cleanup() {
     Mix_CloseAudio();
   #endif
   SDL_Quit();
+
+  // Quit SCE
+  #ifdef __vita__
+  sceKernelExitProcess(0);
+  #endif
 }
 void initCommonEffects() {
   // Effect #0: Death
