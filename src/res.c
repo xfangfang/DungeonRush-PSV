@@ -3,6 +3,11 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
+#ifdef __vita__
+  #include <psp2/kernel/processmgr.h>
+  #include <soloud.h>
+  #include <soloud_wav.h>
+#endif
 #include <stdbool.h>
 #include <stdio.h>
 #include "types.h"
@@ -131,11 +136,22 @@ Effect effects[EFFECTS_SIZE];
 
 Sprite commonSprites[COMMON_SPRITE_SIZE];
 
-Mix_Music *mainTitle;
-Mix_Music *bgms[AUDIO_BGM_SIZE];
 SDL_Joystick *joystick;
+
+#ifdef __vita__
+  SoLoud::Soloud gSoloud;
+  SoLoud::Wav  *mainTitle;
+  SoLoud::Wav  *bgms[AUDIO_BGM_SIZE];
+  SoLoud::Wav  *sounds[AUDIO_SOUND_SIZE];
+#else
+  Mix_Music *mainTitle;
+  Mix_Music *bgms[AUDIO_BGM_SIZE];
+  Mix_Chunk *sounds[AUDIO_SOUND_SIZE];
+#endif
+
 int soundsCount;
-Mix_Chunk *sounds[AUDIO_SOUND_SIZE];
+
+
 
 bool init() {
   // Initialization flag
@@ -208,12 +224,17 @@ bool init() {
                  TTF_GetError());
           success = false;
         }
-        //Initialize SDL_mixer
-        if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
-        {
-            printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
-            success = false;
-        }
+        #ifdef __vita__
+          // Initialize SoLoud
+          gSoloud.init();
+        #else
+          //Initialize SDL_mixer
+          if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+          {
+              printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+              success = false;
+          }
+        #endif
       }
     }
   }
@@ -284,22 +305,38 @@ bool loadTileset(const char* path, SDL_Texture* origin) {
 bool loadAudio() {
   bool success = true;
   for (int i = 0; i < bgmNums; i++) {
-    bgms[i] = Mix_LoadMUS(bgmsPath[i]);
-    success &= bgms[i] != NULL;
-    if (!bgms[i]) printf("Failed to load %s: SDL_mixer Error: %s\n", bgmsPath[i], Mix_GetError());
+    #ifdef __vita__
+      printf("load bgm: %s\n",bgmsPath[i]);
+      SoLoud::Wav* wave = new SoLoud::Wav();
+      wave->load(bgmsPath[i]);
+      wave->setLooping(true);
+      bgms[i] = wave;
+      success &= bgms[i] != NULL;
+    #else
+      bgms[i] = Mix_LoadMUS(bgmsPath[i]);
+      success &= bgms[i] != NULL;
+      if (!bgms[i]) printf("Failed to load %s: SDL_mixer Error: %s\n", bgmsPath[i], Mix_GetError());
+    #endif
     #ifdef DBG
-    else printf("BGM %s loaded\n", bgmsPath[i]);
+      printf("BGM %s loaded\n", bgmsPath[i]);
     #endif
   }
   FILE* f = fopen(soundsPath,"r");
   char buf[PATH_LEN], path[PATH_LEN<<1];
   while (~fscanf(f, "%s", buf)) {
     sprintf(path, "%s%s", soundsPathPrefix, buf);
-    sounds[soundsCount] = Mix_LoadWAV(path);
-    success &= sounds[soundsCount] != NULL;
-    if (!sounds[soundsCount]) printf("Failed to load %s: : SDL_mixer Error: %s\n", path, Mix_GetError());
+    #ifdef __vita__
+      SoLoud::Wav* wave = new SoLoud::Wav();
+      wave->load(path);
+      sounds[soundsCount] = wave;
+      success &= sounds[soundsCount] != NULL;
+    #else
+      sounds[soundsCount] = Mix_LoadWAV(path);
+      success &= sounds[soundsCount] != NULL;
+      if (!sounds[soundsCount]) printf("Failed to load %s: : SDL_mixer Error: %s\n", path, Mix_GetError());
+    #endif
     #ifdef DBG
-    else printf("Sound #%d: %s\n", soundsCount, path);
+      printf("Sound #%d: %s\n", soundsCount, path);
     #endif
     soundsCount++;
   }
@@ -357,8 +394,12 @@ void cleanup() {
   // Quit SDL subsystems
   TTF_Quit();
   IMG_Quit();
-  Mix_CloseAudio();
   if(joystick != NULL) SDL_JoystickClose(joystick);
+  #ifdef __vita__
+    gSoloud.deinit();
+  #else
+    Mix_CloseAudio();
+  #endif
   SDL_Quit();
 }
 void initCommonEffects() {
