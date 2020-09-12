@@ -154,6 +154,11 @@ int soundsCount;
 
 
 bool init() {
+  //Initialize debug print
+  #ifdef DBG
+    startDebug();
+  #endif
+
   // Initialization flag
   bool success = true;
 
@@ -380,6 +385,10 @@ bool loadMedia() {
   return success;
 }
 void cleanup() {
+  // close debug file
+  #ifdef DBG
+    cleanupDebug();
+  #endif
   // Deallocate surface
   for (int i = 0; i < TILESET_SIZE; i++) {
     SDL_DestroyTexture(originTextures[i]);
