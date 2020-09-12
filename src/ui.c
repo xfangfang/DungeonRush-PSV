@@ -11,6 +11,9 @@
 #include "types.h"
 #include "ui.h"
 #include "audio.h"
+#ifdef __vita__
+  #include <psp2/ctrl.h>
+#endif
 
 extern LinkList animationsList[];
 extern bool hasMap[MAP_SIZE][MAP_SIZE];
@@ -26,34 +29,60 @@ int cursorPos;
 bool moveCursor(int optsNum) {
   SDL_Event e;
   bool quit = false;
-  while (SDL_PollEvent(&e)) {
-    if (e.type == SDL_QUIT) {
-      quit = true;
-      cursorPos = optsNum;
-      return quit;
-    } else if (e.type == SDL_KEYDOWN) {
-      int keyValue = e.key.keysym.sym;
-      switch (keyValue) {
-        case SDLK_UP:
-          cursorPos--;
-          playAudio(AUDIO_INTER1);
-          break;
-        case SDLK_DOWN:
-          cursorPos++;
-          playAudio(AUDIO_INTER1);
-          break;
-        case SDLK_RETURN:
-          quit = true;
-          break;
-        case SDLK_ESCAPE:
-          quit = true;
-          cursorPos = optsNum;
-          playAudio(AUDIO_BUTTON1);
-          return quit;
-          break;
+  #ifdef __vita__
+    while (SDL_PollEvent(&e)) {
+      if (e.type == SDL_JOYBUTTONDOWN) {
+        switch (e.jbutton.button) {
+          case 8: // SCE_CTRL_UP
+            cursorPos--;
+            playAudio(AUDIO_INTER1);
+            break;
+          case 6: // SCE_CTRL_DOWN
+            cursorPos++;
+            playAudio(AUDIO_INTER1);
+            break;
+          case 1: // SCE_CTRL_CIRCLE
+            quit = true;
+            break;
+          case 2: // SCE_CTRL_CROSS
+            quit = true;
+            cursorPos = optsNum;
+            playAudio(AUDIO_BUTTON1);
+            return quit;
+            break;
+        }
       }
     }
-  }
+  #else
+    while (SDL_PollEvent(&e)) {
+      if (e.type == SDL_QUIT) {
+        quit = true;
+        cursorPos = optsNum;
+        return quit;
+      } else if (e.type == SDL_KEYDOWN) {
+        int keyValue = e.key.keysym.sym;
+        switch (keyValue) {
+          case SDLK_UP:
+            cursorPos--;
+            playAudio(AUDIO_INTER1);
+            break;
+          case SDLK_DOWN:
+            cursorPos++;
+            playAudio(AUDIO_INTER1);
+            break;
+          case SDLK_RETURN:
+            quit = true;
+            break;
+          case SDLK_ESCAPE:
+            quit = true;
+            cursorPos = optsNum;
+            playAudio(AUDIO_BUTTON1);
+            return quit;
+            break;
+        }
+      }
+    }
+  #endif
   cursorPos += optsNum;
   cursorPos %= optsNum;
   return quit;

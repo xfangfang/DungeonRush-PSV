@@ -133,6 +133,7 @@ Sprite commonSprites[COMMON_SPRITE_SIZE];
 
 Mix_Music *mainTitle;
 Mix_Music *bgms[AUDIO_BGM_SIZE];
+SDL_Joystick *joystick;
 int soundsCount;
 Mix_Chunk *sounds[AUDIO_SOUND_SIZE];
 
@@ -141,7 +142,7 @@ bool init() {
   bool success = true;
 
   // Initialize SDL
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) < 0) {
     printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
     success = false;
   } else {
@@ -153,6 +154,32 @@ bool init() {
       printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
       success = false;
     } else {
+      // initialize Joystick
+      SDL_JoystickEventState(SDL_ENABLE);
+      if (SDL_NumJoysticks() > 0) {
+        joystick = SDL_JoystickOpen(0);
+      }
+      #ifdef DBG
+        // Check for joystick
+        printf("num of sticks: %d\n", SDL_NumJoysticks());
+        printf("%i joysticks were found.\n", SDL_NumJoysticks() );
+        // Querying the Number of Available Joysticks
+        printf("The names of the joysticks are:\n");
+        for (int i = 0; i < SDL_NumJoysticks(); i++ )
+        {
+            printf("    %s\n", SDL_JoystickNameForIndex(i));
+        }
+        if (joystick)
+        {
+            printf("Opened Joystick 0\n");
+            printf("Name: %s\n", SDL_JoystickNameForIndex(0));
+            printf("Number of Axes: %d\n", SDL_JoystickNumAxes(joystick));
+            printf("Number of Buttons: %d\n", SDL_JoystickNumButtons(joystick));
+            printf("Number of Balls: %d\n", SDL_JoystickNumBalls(joystick));
+            printf("Number of Hats: %d\n", SDL_JoystickNumHats(joystick));
+        } else printf("Couldn't open Joystick 0\n");
+      #endif
+
       // Software Render
 #ifndef SOFTWARE_ACC
       renderer = SDL_CreateRenderer(
@@ -331,6 +358,7 @@ void cleanup() {
   TTF_Quit();
   IMG_Quit();
   Mix_CloseAudio();
+  if(joystick != NULL) SDL_JoystickClose(joystick);
   SDL_Quit();
 }
 void initCommonEffects() {

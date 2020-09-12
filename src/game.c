@@ -969,7 +969,7 @@ void pauseGame() {
   SDL_Event e;
   for (bool quit = 0; !quit;) {
     while (SDL_PollEvent(&e)) {
-      if (e.type == SDL_QUIT || e.type == SDL_KEYDOWN) {
+      if (e.type == SDL_QUIT || e.type == SDL_KEYDOWN || e.type == SDL_JOYBUTTONDOWN) {
         quit = true;
         break;
       }
@@ -983,55 +983,101 @@ int gameLoop() {
   // Game loop
   SDL_Event e;
   for (bool quit = 0; !quit;) {
-    while (SDL_PollEvent(&e)) {
-      if (e.type == SDL_QUIT) {
-        quit = true;
-        setTerm(1);
-      } else if (e.type == SDL_KEYDOWN) {
-        int keyValue = e.key.keysym.sym;
-        Snake* player = spriteSnake[0];
-        if (!player->buffs[BUFF_FROZEN] && player->sprites->head != NULL)
-          switch (keyValue) {
-            case SDLK_LEFT:
-            case SDLK_h:
-              changeSpriteDirection(player->sprites->head, LEFT);
-              break;
-            case SDLK_RIGHT:
-            case SDLK_l:
-              changeSpriteDirection(player->sprites->head, RIGHT);
-              break;
-            case SDLK_UP:
-            case SDLK_k:
-              changeSpriteDirection(player->sprites->head, UP);
-              break;
-            case SDLK_DOWN:
-            case SDLK_j:
-              changeSpriteDirection(player->sprites->head, DOWN);
-              break;
-            case SDLK_ESCAPE:
-              pauseGame();
-              break;
-          }
-        if (playersCount > 1) {
-          player = spriteSnake[1];
-          if (!player->buffs[BUFF_FROZEN] && player->sprites->head)
+    #ifdef __vita__
+      while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_JOYBUTTONDOWN) {
+          int keyValue = e.jbutton.button;
+          Snake* player = spriteSnake[0];
+          if (!player->buffs[BUFF_FROZEN] && player->sprites->head != NULL)
             switch (keyValue) {
-              case SDLK_a:
+              case 7:
                 changeSpriteDirection(player->sprites->head, LEFT);
                 break;
-              case SDLK_d:
+              case 9:
                 changeSpriteDirection(player->sprites->head, RIGHT);
                 break;
-              case SDLK_w:
+              case 8:
                 changeSpriteDirection(player->sprites->head, UP);
                 break;
-              case SDLK_s:
+              case 6:
                 changeSpriteDirection(player->sprites->head, DOWN);
                 break;
+              case 10:
+              case 11:
+                pauseGame();
+                break;
             }
+          if (playersCount > 1) {
+            player = spriteSnake[1];
+            if (!player->buffs[BUFF_FROZEN] && player->sprites->head)
+              switch (keyValue) {
+                case 3:
+                  changeSpriteDirection(player->sprites->head, LEFT);
+                  break;
+                case 1:
+                  changeSpriteDirection(player->sprites->head, RIGHT);
+                  break;
+                case 0:
+                  changeSpriteDirection(player->sprites->head, UP);
+                  break;
+                case 2:
+                  changeSpriteDirection(player->sprites->head, DOWN);
+                  break;
+              }
+          }
         }
       }
-    }
+    #else
+      while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_QUIT) {
+          quit = true;
+          setTerm(1);
+        } else if (e.type == SDL_KEYDOWN) {
+          int keyValue = e.key.keysym.sym;
+          Snake* player = spriteSnake[0];
+          if (!player->buffs[BUFF_FROZEN] && player->sprites->head != NULL)
+            switch (keyValue) {
+              case SDLK_LEFT:
+              case SDLK_h:
+                changeSpriteDirection(player->sprites->head, LEFT);
+                break;
+              case SDLK_RIGHT:
+              case SDLK_l:
+                changeSpriteDirection(player->sprites->head, RIGHT);
+                break;
+              case SDLK_UP:
+              case SDLK_k:
+                changeSpriteDirection(player->sprites->head, UP);
+                break;
+              case SDLK_DOWN:
+              case SDLK_j:
+                changeSpriteDirection(player->sprites->head, DOWN);
+                break;
+              case SDLK_ESCAPE:
+                pauseGame();
+                break;
+            }
+          if (playersCount > 1) {
+            player = spriteSnake[1];
+            if (!player->buffs[BUFF_FROZEN] && player->sprites->head)
+              switch (keyValue) {
+                case SDLK_a:
+                  changeSpriteDirection(player->sprites->head, LEFT);
+                  break;
+                case SDLK_d:
+                  changeSpriteDirection(player->sprites->head, RIGHT);
+                  break;
+                case SDLK_w:
+                  changeSpriteDirection(player->sprites->head, UP);
+                  break;
+                case SDLK_s:
+                  changeSpriteDirection(player->sprites->head, DOWN);
+                  break;
+              }
+          }
+        }
+      }
+    #endif
 
     updateMap();
 
