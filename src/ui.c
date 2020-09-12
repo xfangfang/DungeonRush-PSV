@@ -231,14 +231,20 @@ void mainUi() {
   for (int i = 0; i < optsNum; i++) opts[i] = texts + i + 6;
   int opt = chooseOptions(optsNum, opts, 80);
   free(opts);
-
-  blackout();
+  #ifndef __vita__
+    blackout();
+  #else
+    if (opt != optsNum){
+      blackout();
+    }
+  #endif
   clearRenderer();
+  Score** scores;
   switch (opt) {
     case 0:
     case 1:
       if (!chooseLevelUi()) break;
-      Score** scores = startGame(opt + 1);
+      scores = startGame(opt + 1);
       rankListUi(opt + 1, scores);
       for (int i = 0; i < opt + 1; i++) updateLocalRanklist(scores[i]);
       destroyRanklist(opt + 1, scores);
@@ -249,7 +255,9 @@ void mainUi() {
     case 3:
       break;
   }
-  if (opt == optsNum) return;
+  #ifndef __vita__
+    if (opt == optsNum) return;
+  #endif
   if (opt != 3) {
     mainUi();
   }
