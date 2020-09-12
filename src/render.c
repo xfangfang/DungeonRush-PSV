@@ -224,8 +224,18 @@ void renderAnimation(Animation* ani) {
     double interval = (double)ani->duration / ani->origin->frames;
     stage = ani->currentFrame / interval;
   }
-  SDL_RenderCopyEx(renderer, ani->origin->origin, &(ani->origin->crops[stage]),
+  if (ani->flip == SDL_FLIP_NONE && ani->angle == 0){
+    SDL_RenderCopy(renderer, ani->origin->origin, &(ani->origin->crops[stage]),&dst);
+  } else {
+    // I don't know why SDL_RenderCopyEx didn't work on psv
+    #ifdef __vita__
+      SDL_RenderCopyEx(renderer, ani->origin->origin, &(ani->origin->crops[stage]),
+                    &dst, 0, &poi, SDL_FLIP_NONE);
+    #else
+      SDL_RenderCopyEx(renderer, ani->origin->origin, &(ani->origin->crops[stage]),
                    &dst, ani->angle, &poi, ani->flip);
+    #endif
+  }
   if (ani->effect) unsetEffect(ani->origin);
 #ifdef DBG_CROSS
   if (ani->at == AT_BOTTOM_CENTER) {
