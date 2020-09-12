@@ -12,7 +12,7 @@ extern Texture textures[];
 extern Block map[MAP_SIZE][MAP_SIZE];
 extern LinkList animationsList[];
 
-const double MAP_HOW_OLD = 0.05;
+const double MAP_HOW_OLD = 0.03;
 const double MAP_WALL_HOW_DECORATED = 0.1;// this will take effect in pushMaptoRender in game.c
 
 bool isTrap[MAP_SIZE][MAP_SIZE];

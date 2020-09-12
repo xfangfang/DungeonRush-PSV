@@ -1,7 +1,5 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
-
 #include "game.h"
 #include "helper.h"
 #include "map.h"
@@ -120,7 +118,7 @@ void baseUi(int w, int h) {
   pushMapToRender();
 }
 bool chooseLevelUi() {
-  baseUi(30, 12);
+  baseUi(40, 20);
   int optsNum = 3;
   Text** opts = malloc(sizeof(Text*) * optsNum);
   for (int i = 0; i < optsNum; i++) opts[i] = texts + i + 10;
@@ -132,11 +130,11 @@ bool chooseLevelUi() {
   return opt != optsNum;
 }
 void mainUi() {
-  baseUi(30, 12);
+  baseUi(40, 20);
   playBgm(0);
-  int startY = SCREEN_HEIGHT/2 - 70;
-  int startX = SCREEN_WIDTH/5 + 32;
-  createAndPushAnimation(&animationsList[RENDER_LIST_UI_ID], &textures[RES_TITLE], NULL, LOOP_INFI, 80, SCREEN_WIDTH/2, 280, SDL_FLIP_NONE, 0, AT_CENTER);
+  int startY = SCREEN_HEIGHT/2 - 30;
+  int startX = SCREEN_WIDTH/5 - 20;
+  createAndPushAnimation(&animationsList[RENDER_LIST_UI_ID], &textures[RES_TITLE], NULL, LOOP_INFI, 80, SCREEN_WIDTH/2, 150, SDL_FLIP_NONE, 0, AT_CENTER);
   createAndPushAnimation(&animationsList[RENDER_LIST_SPRITE_ID],
                          &textures[RES_KNIGHT_M], NULL, LOOP_INFI,
                          SPRITE_ANIMATION_DURATION, startX,
@@ -155,7 +153,8 @@ void mainUi() {
   createAndPushAnimation(&animationsList[RENDER_LIST_SPRITE_ID],
                          &textures[RES_ELF_M], NULL, LOOP_INFI,
                          SPRITE_ANIMATION_DURATION, startX,
-                         startY, SDL_FLIP_HORIZONTAL, 0, AT_BOTTOM_CENTER);
+                         startY, SDL_FLIP_HORIZONTAL, 10, AT_BOTTOM_CENTER);
+
   createAndPushAnimation(&animationsList[RENDER_LIST_EFFECT_ID],
                          &textures[RES_HALO_EXPLOSION2], NULL, LOOP_INFI,
                          SPRITE_ANIMATION_DURATION, startX - UI_MAIN_GAP*1.5,
@@ -256,7 +255,7 @@ void mainUi() {
   }
 }
 void rankListUi(int count, Score** scores) {
-  baseUi(30, 12 + MAX(0, count - 4));
+  baseUi(40, 20);
   playBgm(0);
   Text** opts = malloc(sizeof(Text*) * count);
   char buf[1 << 8];

@@ -498,7 +498,7 @@ void initGame(int playersNum) {
   }
   initInfo();
   // create map
-  initRandomMap(0.7, 7, GAME_TRAP_RATE);
+  initRandomMap(0.8, 7, GAME_TRAP_RATE);
 
   clearItemMap();
   // create enemies
