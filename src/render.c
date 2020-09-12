@@ -20,7 +20,7 @@ extern Effect effects[];
 extern SDL_Color BLACK;
 extern SDL_Color WHITE;
 
-const int SCALLING_FACTOR = 2;
+extern const int SCALLING_FACTOR = 2;
 extern int texturesCount;
 extern Texture textures[TEXTURES_SIZE];
 extern int textsCount;

@@ -10,10 +10,10 @@
 #include "weapon.h"
 
 
+extern const int n = SCREEN_WIDTH/UNIT;
+extern const int m = SCREEN_HEIGHT/UNIT;
 
 // Constants
-const int n = SCREEN_WIDTH/UNIT;
-const int m = SCREEN_HEIGHT/UNIT;
 
 const char tilesetPath[TILESET_SIZE][PATH_LEN] = {
     "res/drawable/0x72_DungeonTilesetII_v1_3",
