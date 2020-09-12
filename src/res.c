@@ -14,7 +14,55 @@ extern const int n = SCREEN_WIDTH/UNIT;
 extern const int m = SCREEN_HEIGHT/UNIT;
 
 // Constants
+#ifdef __vita__
+const char tilesetPath[TILESET_SIZE][PATH_LEN] = {
+    "app0:drawable/0x72_DungeonTilesetII_v1_3",
+    "app0:drawable/fireball_explosion1",
+    "app0:drawable/halo_explosion1",
+    "app0:drawable/halo_explosion2",
+    "app0:drawable/fireball",
+    "app0:drawable/floor_spike",
+    "app0:drawable/floor_exit",
+    "app0:drawable/HpMed",
+    "app0:drawable/SwordFx",
+    "app0:drawable/ClawFx",
+    "app0:drawable/Shine",
+    "app0:drawable/Thunder",
+    "app0:drawable/BloodBound",
+    "app0:drawable/arrow",
+    "app0:drawable/explosion-2",
+    "app0:drawable/ClawFx2",
+    "app0:drawable/Axe",
+    "app0:drawable/cross_hit",
+    "app0:drawable/blood",
+    "app0:drawable/SolidFx",
+    "app0:drawable/IcePick",
+    "app0:drawable/IceShatter",
+    "app0:drawable/Ice",
+    "app0:drawable/SwordPack",
+    "app0:drawable/HolyShield",
+    "app0:drawable/golden_cross_hit",
+    "app0:drawable/ui",
+    "app0:drawable/title",
+    "app0:drawable/purple_ball",
+    "app0:drawable/purple_exp",
+    "app0:drawable/staff",
+    "app0:drawable/Thunder_Yellow",
+    "app0:drawable/attack_up",
+    "app0:drawable/powerful_bow"};
+const char fontPath[] = "app0:font/m5x7.ttf";
+const char textsetPath[] = "app0:text.txt";
 
+extern const int bgmNums = 1;
+const char bgmsPath[AUDIO_BGM_SIZE][PATH_LEN] = {
+  "app0:audio/main_title.ogg",
+  // "app0:audio/bg1.ogg",
+  // "app0:audio/bg2.ogg",
+  // "app0:audio/bg3.ogg"
+};
+const char soundsPath[PATH_LEN] = "app0:audio/sounds";
+const char soundsPathPrefix[PATH_LEN] = "app0:audio/";
+#else
 const char tilesetPath[TILESET_SIZE][PATH_LEN] = {
     "res/drawable/0x72_DungeonTilesetII_v1_3",
     "res/drawable/fireball_explosion1",
@@ -62,6 +110,8 @@ const char bgmsPath[AUDIO_BGM_SIZE][PATH_LEN] = {
 };
 const char soundsPath[PATH_LEN] = "res/audio/sounds";
 const char soundsPathPrefix[PATH_LEN] = "res/audio/";
+#endif
+
 // Gloabls
 int texturesCount;
 Texture textures[TEXTURES_SIZE];

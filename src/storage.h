@@ -3,7 +3,11 @@
 #include "types.h"
 #include <stdio.h>
 
-#define STORAGE_PATH "storage.dat"
+#ifdef __vita__
+  #define STORAGE_PATH "ux0:data/dungeonrush_storage.dat"
+#else
+  #define STORAGE_PATH "storage.dat"
+#endif
 #define STORAGE_RANKLIST_NUM 10
 
 void updateLocalRanklist(Score*);
