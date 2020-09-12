@@ -87,14 +87,14 @@ bool moveCursor(int optsNum) {
   cursorPos %= optsNum;
   return quit;
 }
-int chooseOptions(int optionsNum, Text** options) {
+int chooseOptions(int optionsNum, Text** options, int offsetY) {
   cursorPos = 0;
   Snake* player = createSnake(2, 0);
   appendSpriteToSnake(player, SPRITE_KNIGHT, SCREEN_WIDTH / 2,
                       SCREEN_HEIGHT / 2, UP);
   int lineGap = FONT_SIZE + FONT_SIZE / 2,
       totalHeight = lineGap * (optionsNum - 1);
-  int startY = (SCREEN_HEIGHT - totalHeight) / 2;
+  int startY = (SCREEN_HEIGHT - totalHeight) / 2 + offsetY;
   while (!moveCursor(optionsNum)) {
     Sprite* sprite = player->sprites->head->element;
     sprite->ani->at = AT_CENTER;
@@ -124,7 +124,7 @@ bool chooseLevelUi() {
   int optsNum = 3;
   Text** opts = malloc(sizeof(Text*) * optsNum);
   for (int i = 0; i < optsNum; i++) opts[i] = texts + i + 10;
-  int opt = chooseOptions(optsNum, opts);
+  int opt = chooseOptions(optsNum, opts, 0);
   if (opt != optsNum)
     setLevel(opt);
   blackout();
@@ -230,7 +230,7 @@ void mainUi() {
   int optsNum = 4;
   Text** opts = malloc(sizeof(Text*) * optsNum);
   for (int i = 0; i < optsNum; i++) opts[i] = texts + i + 6;
-  int opt = chooseOptions(optsNum, opts);
+  int opt = chooseOptions(optsNum, opts, 80);
   free(opts);
 
   blackout();
@@ -267,7 +267,7 @@ void rankListUi(int count, Score** scores) {
     opts[i] = createText(buf, WHITE);
   }
 
-  chooseOptions(count, opts);
+  chooseOptions(count, opts, 0);
 
   for (int i = 0; i < count; i++) destroyText(opts[i]);
   free(opts);

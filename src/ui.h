@@ -4,7 +4,7 @@
 #include "types.h"
 #define UI_MAIN_GAP 40
 #define UI_MAIN_GAP_ALT 22
-int chooseOptions(int optsNum, Text** options);
+int chooseOptions(int optsNum, Text** options, int offsetY);
 void baseUi(int,int);
 void mainUi();
 void rankListUi(int,Score**);
