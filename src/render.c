@@ -63,8 +63,10 @@ void initInfo() {
   sprintf(buf, "Stage:%3d", stage);
   if (stageText) setText(stageText, buf);
   else stageText = createText(buf, WHITE);
-  for (int i = 0; i < playersCount; i++) scoresText[i] = createText("placeholder", WHITE);
-  taskText = createText("placeholder", WHITE);
+  for (int i = 0; i < playersCount; i++) {
+    if (!scoresText[i]) scoresText[i] = createText("placeholder", WHITE);
+  }
+  if (!taskText) taskText = createText("placeholder", WHITE);
 }
 void initRenderer() {
   renderFrames = 0;
