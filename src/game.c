@@ -546,8 +546,8 @@ void destroyGame(int status) {
   extern SDL_Color WHITE;
   Text* text = createText(msg, WHITE);
   renderCenteredText(text, SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 1);
-  destroyText(text);
   SDL_RenderPresent(renderer);
+  destroyText(text);
   sleep(RENDER_GAMEOVER_DURATION);
   clearRenderer();
 }
