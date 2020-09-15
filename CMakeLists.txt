@@ -18,8 +18,8 @@ IF (CMAKE_BUILD_TYPE STREQUAL Debug)
   ADD_DEFINITIONS(-DDBG)
 ENDIF()
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11 -g  -fpermissive")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -fpermissive")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -w -fpermissive")
 
 file(GLOB_RECURSE CFILES "${CMAKE_SOURCE_DIR}/*.c")
 SET_SOURCE_FILES_PROPERTIES(${CFILES} PROPERTIES LANGUAGE CXX )
@@ -69,9 +69,6 @@ vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
   FILE res/font/m5x7.ttf font/m5x7.ttf
 
   FILE res/audio/main_title_lite.ogg audio/main_title.ogg
-  # FILE res/audio/bg1.ogg audio/bg1.ogg
-  # FILE res/audio/bg2_lite.ogg audio/bg2.ogg
-  # FILE res/audio/bg3.ogg audio/bg3.ogg
   FILE res/audio/arrow_hit.wav audio/arrow_hit.wav
   FILE res/audio/button1.wav audio/button1.wav
   FILE res/audio/claw_hit.wav audio/claw_hit.wav
