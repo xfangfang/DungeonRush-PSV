@@ -33,9 +33,14 @@ aux_source_directory(./src dir_src)
 add_executable(${PROJECT_NAME} ${dir_src})
 
 target_link_libraries(${PROJECT_NAME}
+  SDL2_mixer
+  mikmod
+  mpg123
+  FLAC
+  vorbisfile
+  vorbis
+  ogg
   SDL2
-  soloud
-  SDL2_gfx
   SDL2_image
   jpeg
   SDL2_ttf
@@ -68,7 +73,10 @@ vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
   FILE res/text.txt text.txt
   FILE res/font/m5x7.ttf font/m5x7.ttf
 
-  FILE res/audio/main_title_lite.ogg audio/main_title.ogg
+  FILE res/audio/main_title.ogg audio/main_title.ogg
+  FILE res/audio/bg1.ogg audio/bg1.ogg
+  FILE res/audio/bg2.ogg audio/bg2.ogg
+  FILE res/audio/bg3.ogg audio/bg3.ogg
   FILE res/audio/arrow_hit.wav audio/arrow_hit.wav
   FILE res/audio/button1.wav audio/button1.wav
   FILE res/audio/claw_hit.wav audio/claw_hit.wav

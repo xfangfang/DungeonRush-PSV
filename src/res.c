@@ -5,8 +5,6 @@
 #include <SDL2/SDL_mixer.h>
 #ifdef __vita__
   #include <psp2/kernel/processmgr.h>
-  #include <soloud.h>
-  #include <soloud_wav.h>
 #endif
 #include <stdbool.h>
 #include <stdio.h>
@@ -58,12 +56,12 @@ const char tilesetPath[TILESET_SIZE][PATH_LEN] = {
 const char fontPath[] = "app0:font/m5x7.ttf";
 const char textsetPath[] = "app0:text.txt";
 
-extern const int bgmNums = 1;
+extern const int bgmNums = 4;
 const char bgmsPath[AUDIO_BGM_SIZE][PATH_LEN] = {
   "app0:audio/main_title.ogg",
-  // "app0:audio/bg1.ogg",
-  // "app0:audio/bg2.ogg",
-  // "app0:audio/bg3.ogg"
+  "app0:audio/bg1.ogg",
+  "app0:audio/bg2.ogg",
+  "app0:audio/bg3.ogg"
 };
 const char soundsPath[PATH_LEN] = "app0:audio/sounds";
 const char soundsPathPrefix[PATH_LEN] = "app0:audio/";
@@ -138,16 +136,9 @@ Sprite commonSprites[COMMON_SPRITE_SIZE];
 
 SDL_Joystick *joystick;
 
-#ifdef __vita__
-  SoLoud::Soloud gSoloud;
-  SoLoud::Wav  *mainTitle;
-  SoLoud::Wav  *bgms[AUDIO_BGM_SIZE];
-  SoLoud::Wav  *sounds[AUDIO_SOUND_SIZE];
-#else
-  Mix_Music *mainTitle;
-  Mix_Music *bgms[AUDIO_BGM_SIZE];
-  Mix_Chunk *sounds[AUDIO_SOUND_SIZE];
-#endif
+Mix_Music *mainTitle;
+Mix_Music *bgms[AUDIO_BGM_SIZE];
+Mix_Chunk *sounds[AUDIO_SOUND_SIZE];
 
 int soundsCount;
 
@@ -229,17 +220,13 @@ bool init() {
                  TTF_GetError());
           success = false;
         }
-        #ifdef __vita__
-          // Initialize SoLoud
-          gSoloud.init();
-        #else
-          //Initialize SDL_mixer
-          if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
-          {
-              printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
-              success = false;
-          }
-        #endif
+        //Initialize SDL_mixer
+        if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+        {
+            printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", 
+                  Mix_GetError() );
+            success = false;
+        }
       }
     }
   }
@@ -310,18 +297,9 @@ bool loadTileset(const char* path, SDL_Texture* origin) {
 bool loadAudio() {
   bool success = true;
   for (int i = 0; i < bgmNums; i++) {
-    #ifdef __vita__
-      printf("load bgm: %s\n",bgmsPath[i]);
-      SoLoud::Wav* wave = new SoLoud::Wav();
-      wave->load(bgmsPath[i]);
-      wave->setLooping(true);
-      bgms[i] = wave;
-      success &= bgms[i] != NULL;
-    #else
-      bgms[i] = Mix_LoadMUS(bgmsPath[i]);
-      success &= bgms[i] != NULL;
-      if (!bgms[i]) printf("Failed to load %s: SDL_mixer Error: %s\n", bgmsPath[i], Mix_GetError());
-    #endif
+    bgms[i] = Mix_LoadMUS(bgmsPath[i]);
+    success &= bgms[i] != NULL;
+    if (!bgms[i]) printf("Failed to load %s: SDL_mixer Error: %s\n", bgmsPath[i], Mix_GetError());
     #ifdef DBG
       printf("BGM %s loaded\n", bgmsPath[i]);
     #endif
@@ -330,16 +308,9 @@ bool loadAudio() {
   char buf[PATH_LEN], path[PATH_LEN<<1];
   while (~fscanf(f, "%s", buf)) {
     sprintf(path, "%s%s", soundsPathPrefix, buf);
-    #ifdef __vita__
-      SoLoud::Wav* wave = new SoLoud::Wav();
-      wave->load(path);
-      sounds[soundsCount] = wave;
-      success &= sounds[soundsCount] != NULL;
-    #else
-      sounds[soundsCount] = Mix_LoadWAV(path);
-      success &= sounds[soundsCount] != NULL;
-      if (!sounds[soundsCount]) printf("Failed to load %s: : SDL_mixer Error: %s\n", path, Mix_GetError());
-    #endif
+    sounds[soundsCount] = Mix_LoadWAV(path);
+    success &= sounds[soundsCount] != NULL;
+    if (!sounds[soundsCount]) printf("Failed to load %s: : SDL_mixer Error: %s\n", path, Mix_GetError());
     #ifdef DBG
       printf("Sound #%d: %s\n", soundsCount, path);
     #endif
@@ -404,11 +375,7 @@ void cleanup() {
   TTF_Quit();
   IMG_Quit();
   if(joystick != NULL) SDL_JoystickClose(joystick);
-  #ifdef __vita__
-    gSoloud.deinit();
-  #else
-    Mix_CloseAudio();
-  #endif
+  Mix_CloseAudio();
   SDL_Quit();
 
   // Quit SCE
