@@ -40,13 +40,14 @@ target_link_libraries(${PROJECT_NAME}
   vorbisfile
   vorbis
   ogg
-  SDL2
+  modplug
   SDL2_image
   jpeg
   webp
   SDL2_ttf
   freetype
   png
+  SDL2
   z
   vita2d
   SceDisplay_stub
